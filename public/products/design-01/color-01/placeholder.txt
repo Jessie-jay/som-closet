@@ -1,0 +1,13 @@
+PLACEHOLDER IMAGES
+
+The Imgur URLs provided are not accessible. To complete the setup:
+
+1. Save your 7 product images as:
+   - view-01.jpg (main homepage image)
+   - view-02.jpg through view-07.jpg (detail page gallery)
+
+2. Place them in this folder: public/products/design-01/color-01/
+
+3. The app is already configured to use these local paths
+
+Current status: Waiting for actual image files
