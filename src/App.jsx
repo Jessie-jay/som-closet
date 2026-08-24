@@ -648,6 +648,7 @@ function App() {
                       src={item.image}
                       alt={item.name}
                       className="w-full h-full object-contain"
+                      loading="lazy"
                     />
                     
                     {/* Bottom overlay for buttons */}
@@ -822,6 +823,7 @@ function App() {
                 src={getCurrentImages()[currentImageIndex]}
                 alt={selectedItem.name}
                 className="w-full h-full object-contain"
+                loading="lazy"
               />
               
               {/* Carousel Navigation Arrows */}
