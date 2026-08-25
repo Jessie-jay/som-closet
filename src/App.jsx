@@ -916,9 +916,9 @@ function App() {
           </div>
 
           <div className="max-w-2xl mx-auto -mt-px">
-            {/* Product Image Carousel */}
+            {/* Product Image Carousel - Reduced height */}
             <div 
-              className="aspect-[3/4] relative touch-pan-y"
+              className="aspect-[3/3.5] relative touch-pan-y"
               onTouchStart={(e) => {
                 const touch = e.touches[0]
                 setTouchStart(touch.clientX)
@@ -1001,8 +1001,8 @@ function App() {
               </div>
             )}
 
-            {/* Product Info - Reduced spacing */}
-            <div className="px-4 pb-28">
+            {/* Product Info - Adjusted padding for shorter carousel */}
+            <div className="px-4 pb-40">
               <h1 className="text-xl font-semibold tracking-wide uppercase mb-1">
                 {selectedItem.name}
               </h1>
@@ -1063,8 +1063,8 @@ function App() {
             </div>
           </div>
 
-          {/* Fixed Bottom CTA - More compact */}
-          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3">
+          {/* Fixed Bottom CTA - More padding to avoid Netlify badge */}
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 pb-20">
             <div className="max-w-2xl mx-auto">
               <a
                 href={`https://wa.me/2347039619632?text=${encodeURIComponent(
