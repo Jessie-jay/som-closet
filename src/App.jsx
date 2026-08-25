@@ -465,6 +465,8 @@ function App() {
   const [showNotifications, setShowNotifications] = useState(false)
   const [notifications, setNotifications] = useState([])
   const [unreadCount, setUnreadCount] = useState(0)
+  const [touchStart, setTouchStart] = useState(null)
+  const [touchEnd, setTouchEnd] = useState(null)
 
   // Preload the first 4 product thumbnail images for faster initial display
   useEffect(() => {
@@ -915,7 +917,41 @@ function App() {
 
           <div className="max-w-2xl mx-auto -mt-px">
             {/* Product Image Carousel */}
-            <div className="aspect-[3/4] relative">
+            <div 
+              className="aspect-[3/4] relative touch-pan-y"
+              onTouchStart={(e) => {
+                const touch = e.touches[0]
+                setTouchStart(touch.clientX)
+                setTouchEnd(touch.clientX)
+              }}
+              onTouchMove={(e) => {
+                setTouchEnd(e.touches[0].clientX)
+              }}
+              onTouchEnd={() => {
+                if (!touchStart || !touchEnd) return
+                
+                const distance = touchStart - touchEnd
+                const isLeftSwipe = distance > 50
+                const isRightSwipe = distance < -50
+                
+                if (isLeftSwipe) {
+                  // Swipe left - next image
+                  setCurrentImageIndex((prev) => 
+                    prev === getCurrentImages().length - 1 ? 0 : prev + 1
+                  )
+                }
+                
+                if (isRightSwipe) {
+                  // Swipe right - previous image
+                  setCurrentImageIndex((prev) => 
+                    prev === 0 ? getCurrentImages().length - 1 : prev - 1
+                  )
+                }
+                
+                setTouchStart(null)
+                setTouchEnd(null)
+              }}
+            >
               <OptimizedImage
                 src={getCurrentImages()[currentImageIndex]}
                 alt={selectedItem.name}
@@ -965,27 +1001,27 @@ function App() {
               </div>
             )}
 
-            {/* Product Info */}
-            <div className="px-4 pb-32">
-              <h1 className="text-2xl font-medium tracking-wide uppercase mb-2">
+            {/* Product Info - Reduced spacing */}
+            <div className="px-4 pb-28">
+              <h1 className="text-xl font-semibold tracking-wide uppercase mb-1">
                 {selectedItem.name}
               </h1>
-              <p className="text-xl mb-4">₦{selectedItem.price.toLocaleString()}</p>
-              <p className="text-sm text-gray-600 mb-6">{selectedItem.details}</p>
+              <p className="text-lg mb-2">₦{selectedItem.price.toLocaleString()}</p>
+              <p className="text-xs text-gray-600 mb-4">{selectedItem.details}</p>
 
               {/* Color Selection */}
               {selectedItem.colorOptions && (
-                <div className="mb-6">
-                  <div className="flex justify-between items-center mb-3">
+                <div className="mb-4">
+                  <div className="flex justify-between items-center mb-2">
                     <label className="text-sm font-medium">Color</label>
-                    <span className="text-sm text-gray-600">{selectedColorOption?.name || selectedItem.colors[selectedColorIndex]}</span>
+                    <span className="text-xs text-gray-600">{selectedColorOption?.name || selectedItem.colors[selectedColorIndex]}</span>
                   </div>
-                  <div className="flex gap-3">
+                  <div className="flex gap-2">
                     {selectedItem.colorOptions.map((color, idx) => (
                       <button
                         key={idx}
                         onClick={() => handleColorChange(color, idx)}
-                        className={`w-12 h-12 rounded-full ${color.class} transition-all ${
+                        className={`w-10 h-10 rounded-full ${color.class} transition-all ${
                           selectedColorIndex === idx
                             ? 'ring-2 ring-black ring-offset-2'
                             : 'ring-1 ring-gray-300'
@@ -993,7 +1029,7 @@ function App() {
                       />
                     ))}
                     {selectedItem.hasMoreColors && (
-                      <button className="w-12 h-12 rounded-full border border-gray-300 flex items-center justify-center text-xs">
+                      <button className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-xs">
                         +1
                       </button>
                     )}
@@ -1001,22 +1037,22 @@ function App() {
                 </div>
               )}
 
-              {/* Quantity Selector - Compact & Aesthetic */}
-              <div className="mb-6">
-                <label className="text-sm font-medium block mb-3">Quantity</label>
-                <div className="flex items-center gap-4 w-40">
+              {/* Quantity Selector - Compact */}
+              <div className="mb-4">
+                <label className="text-sm font-medium block mb-2">Quantity</label>
+                <div className="flex items-center gap-3 w-36">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center hover:border-black transition-colors"
+                    className="w-9 h-9 border-2 border-gray-300 rounded-full flex items-center justify-center hover:border-black transition-colors"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
                     </svg>
                   </button>
-                  <span className="flex-1 text-center font-medium text-lg">{quantity}</span>
+                  <span className="flex-1 text-center font-medium text-base">{quantity}</span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center hover:border-black transition-colors"
+                    className="w-9 h-9 border-2 border-gray-300 rounded-full flex items-center justify-center hover:border-black transition-colors"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -1027,8 +1063,8 @@ function App() {
             </div>
           </div>
 
-          {/* Fixed Bottom CTA */}
-          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+          {/* Fixed Bottom CTA - More compact */}
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3">
             <div className="max-w-2xl mx-auto">
               <a
                 href={`https://wa.me/2347039619632?text=${encodeURIComponent(
@@ -1043,13 +1079,13 @@ function App() {
                 onClick={handleWhatsAppClick}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-4 bg-black text-white rounded-full text-sm font-medium uppercase tracking-wide hover:bg-gray-800 transition-colors flex items-center justify-center"
+                className="w-full py-3.5 bg-black text-white rounded-full text-sm font-medium uppercase tracking-wide hover:bg-gray-800 transition-colors flex items-center justify-center"
               >
                 Add to cart • ₦{(selectedItem.price * quantity).toLocaleString()}
               </a>
               <button
                 onClick={handleClose}
-                className="w-full mt-3 py-4 text-sm font-medium uppercase tracking-wide hover:bg-gray-50 transition-colors"
+                className="w-full mt-2 py-3 text-sm font-medium uppercase tracking-wide hover:bg-gray-50 transition-colors"
               >
                 Continue Shopping
               </button>
