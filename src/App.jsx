@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Logo from './components/Logo'
+import OptimizedImage from './components/OptimizedImage'
 import './App.css'
 
 // Sample catalogue data matching the design
@@ -382,6 +383,26 @@ function App() {
   const [notifications, setNotifications] = useState([])
   const [unreadCount, setUnreadCount] = useState(0)
 
+  // Preload the first 4 product thumbnail images for faster initial display
+  useEffect(() => {
+    const preloadImages = catalogueItems.slice(0, 4).map(item => {
+      const link = document.createElement('link')
+      link.rel = 'preload'
+      link.as = 'image'
+      link.href = item.image
+      document.head.appendChild(link)
+      return link
+    })
+
+    return () => {
+      preloadImages.forEach(link => {
+        if (link.parentNode) {
+          document.head.removeChild(link)
+        }
+      })
+    }
+  }, [])
+
   // Check if user just returned from WhatsApp
   useEffect(() => {
     // Load notifications from localStorage
@@ -644,11 +665,11 @@ function App() {
                   className="cursor-pointer"
                 >
                   <div className="relative aspect-[3/4] bg-white overflow-hidden">
-                    <img
+                    <OptimizedImage
                       src={item.image}
                       alt={item.name}
                       className="w-full h-full object-contain"
-                      loading="lazy"
+                      priority={false}
                     />
                     
                     {/* Bottom overlay for buttons */}
@@ -812,11 +833,11 @@ function App() {
           <div className="max-w-2xl mx-auto -mt-px">
             {/* Product Image Carousel */}
             <div className="aspect-[3/4] relative">
-              <img
+              <OptimizedImage
                 src={getCurrentImages()[currentImageIndex]}
                 alt={selectedItem.name}
                 className="w-full h-full object-contain"
-                loading="lazy"
+                priority={true}
               />
               
               {/* Carousel Navigation Arrows */}
