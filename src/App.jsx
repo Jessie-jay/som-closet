@@ -365,6 +365,89 @@ const catalogueItems = [
     ],
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     details: 'Exclusive discounts on 5+ polo orders.'
+  },
+  {
+    id: 11,
+    name: 'Premium Polo Design 12',
+    price: 12000,
+    category: 'Polo',
+    image: '/Edited images/Design-12/color-01/view-01.png',
+    images: [
+      '/Edited images/Design-12/color-01/view-01.png',
+      '/Edited images/Design-12/color-01/view-02.png',
+      '/Edited images/Design-12/color-01/view-03.png',
+      '/Edited images/Design-12/color-01/view-04.png',
+      '/Edited images/Design-12/color-01/view-05.png',
+      '/Edited images/Design-12/color-01/view-06.png'
+    ],
+    description: 'Elegant polo design with premium fabric and contemporary styling. Perfect for any occasion.',
+    colors: ['Black'],
+    colorOptions: [
+      { 
+        name: 'Black', 
+        class: 'bg-black',
+        images: [
+          '/Edited images/Design-12/color-01/view-01.png',
+          '/Edited images/Design-12/color-01/view-02.png',
+          '/Edited images/Design-12/color-01/view-03.png',
+          '/Edited images/Design-12/color-01/view-04.png',
+          '/Edited images/Design-12/color-01/view-05.png',
+          '/Edited images/Design-12/color-01/view-06.png'
+        ]
+      }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    details: 'Exclusive discounts on 5+ polo orders.'
+  },
+  {
+    id: 12,
+    name: 'Premium Polo Design 13',
+    price: 12000,
+    category: 'Polo',
+    image: '/Edited images/Design-13/view-01.png',
+    images: [
+      '/Edited images/Design-13/view-01.png',
+      '/Edited images/Design-13/view-02.png',
+      '/Edited images/Design-13/view-03.png',
+      '/Edited images/Design-13/view-04.png',
+      '/Edited images/Design-13/view-05.png',
+      '/Edited images/Design-13/view-06.png'
+    ],
+    description: 'Sophisticated polo with refined details and exceptional quality. A timeless addition to your wardrobe.',
+    colors: ['Navy'],
+    colorOptions: [
+      { 
+        name: 'Navy', 
+        class: 'bg-blue-900'
+      }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    details: 'Exclusive discounts on 5+ polo orders.'
+  },
+  {
+    id: 13,
+    name: 'Premium Polo Design 14',
+    price: 12000,
+    category: 'Polo',
+    image: '/Edited images/Design-14/view-01.png',
+    images: [
+      '/Edited images/Design-14/view-01.png',
+      '/Edited images/Design-14/view-02.png',
+      '/Edited images/Design-14/view-03.png',
+      '/Edited images/Design-14/view-04.png',
+      '/Edited images/Design-14/view-05.png',
+      '/Edited images/Design-14/view-06.png'
+    ],
+    description: 'Modern polo design with premium materials and impeccable craftsmanship. Style meets comfort.',
+    colors: ['Maroon'],
+    colorOptions: [
+      { 
+        name: 'Maroon', 
+        class: 'bg-red-900'
+      }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    details: 'Exclusive discounts on 5+ polo orders.'
   }
 ]
 
