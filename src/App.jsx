@@ -467,6 +467,7 @@ function App() {
   const [unreadCount, setUnreadCount] = useState(0)
   const [touchStart, setTouchStart] = useState(null)
   const [touchEnd, setTouchEnd] = useState(null)
+  const [isSwiping, setIsSwiping] = useState(false)
 
   // Preload the first 4 product thumbnail images for faster initial display
   useEffect(() => {
@@ -916,32 +917,35 @@ function App() {
           </div>
 
           <div className="max-w-2xl mx-auto -mt-px">
-            {/* Product Image Carousel - Reduced height */}
+            {/* Product Image Carousel - Instagram-style swipeable */}
             <div 
-              className="aspect-[3/3.5] relative touch-pan-y"
+              className="aspect-[3/3.5] relative touch-none overflow-hidden"
               onTouchStart={(e) => {
                 const touch = e.touches[0]
                 setTouchStart(touch.clientX)
                 setTouchEnd(touch.clientX)
+                setIsSwiping(false)
               }}
               onTouchMove={(e) => {
-                setTouchEnd(e.touches[0].clientX)
+                const touch = e.touches[0]
+                setTouchEnd(touch.clientX)
+                setIsSwiping(true)
               }}
               onTouchEnd={() => {
                 if (!touchStart || !touchEnd) return
                 
                 const distance = touchStart - touchEnd
-                const isLeftSwipe = distance > 50
-                const isRightSwipe = distance < -50
+                const isLeftSwipe = distance > 30
+                const isRightSwipe = distance < -30
                 
-                if (isLeftSwipe) {
+                if (isLeftSwipe && getCurrentImages().length > 1) {
                   // Swipe left - next image
                   setCurrentImageIndex((prev) => 
                     prev === getCurrentImages().length - 1 ? 0 : prev + 1
                   )
                 }
                 
-                if (isRightSwipe) {
+                if (isRightSwipe && getCurrentImages().length > 1) {
                   // Swipe right - previous image
                   setCurrentImageIndex((prev) => 
                     prev === 0 ? getCurrentImages().length - 1 : prev - 1
@@ -950,14 +954,17 @@ function App() {
                 
                 setTouchStart(null)
                 setTouchEnd(null)
+                setIsSwiping(false)
               }}
             >
-              <OptimizedImage
-                src={getCurrentImages()[currentImageIndex]}
-                alt={selectedItem.name}
-                className="w-full h-full object-contain"
-                priority={true}
-              />
+              <div className="relative w-full h-full">
+                <OptimizedImage
+                  src={getCurrentImages()[currentImageIndex]}
+                  alt={selectedItem.name}
+                  className="w-full h-full object-contain transition-opacity duration-200"
+                  priority={true}
+                />
+              </div>
               
               {/* Carousel Navigation Arrows */}
               {getCurrentImages().length > 1 && (
@@ -966,7 +973,7 @@ function App() {
                     onClick={() => setCurrentImageIndex((prev) => 
                       prev === 0 ? getCurrentImages().length - 1 : prev - 1
                     )}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors z-10"
                   >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -976,7 +983,7 @@ function App() {
                     onClick={() => setCurrentImageIndex((prev) => 
                       prev === getCurrentImages().length - 1 ? 0 : prev + 1
                     )}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors z-10"
                   >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -993,16 +1000,16 @@ function App() {
                   <button
                     key={idx}
                     onClick={() => setCurrentImageIndex(idx)}
-                    className={`w-2 h-2 rounded-full transition-colors ${
-                      idx === currentImageIndex ? 'bg-black' : 'bg-gray-300'
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      idx === currentImageIndex ? 'bg-black w-6' : 'bg-gray-300'
                     }`}
                   />
                 ))}
               </div>
             )}
 
-            {/* Product Info - Adjusted padding for shorter carousel */}
-            <div className="px-4 pb-40">
+            {/* Product Info - Scrollable with CTAs */}
+            <div className="px-4 pb-6">
               <h1 className="text-xl font-semibold tracking-wide uppercase mb-1">
                 {selectedItem.name}
               </h1>
@@ -1060,35 +1067,33 @@ function App() {
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* Fixed Bottom CTA - More padding to avoid Netlify badge */}
-          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 pb-20">
-            <div className="max-w-2xl mx-auto">
-              <a
-                href={`https://wa.me/2347039619632?text=${encodeURIComponent(
-                  `Hi! I want to order:\n\n` +
-                  `📦 Product: ${selectedItem.name}\n` +
-                  `🎨 Color: ${selectedColorOption?.name || selectedItem.colors[selectedColorIndex]}\n` +
-                  `📊 Quantity: ${quantity}\n` +
-                  `💰 Total: ₦${(selectedItem.price * quantity).toLocaleString()}\n\n` +
-                  `🖼️ Product Image:\n${window.location.origin}${getCurrentImages()[currentImageIndex]}\n\n` +
-                  `Please confirm this order. Thank you!`
-                )}`}
-                onClick={handleWhatsAppClick}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-3.5 bg-black text-white rounded-full text-sm font-medium uppercase tracking-wide hover:bg-gray-800 transition-colors flex items-center justify-center"
-              >
-                Add to cart • ₦{(selectedItem.price * quantity).toLocaleString()}
-              </a>
-              <button
-                onClick={handleClose}
-                className="w-full mt-2 py-3 text-sm font-medium uppercase tracking-wide hover:bg-gray-50 transition-colors"
-              >
-                Continue Shopping
-              </button>
+              {/* CTA Buttons - Scrollable with content */}
+              <div className="mt-6 mb-8">
+                <a
+                  href={`https://wa.me/2347039619632?text=${encodeURIComponent(
+                    `Hi! I want to order:\n\n` +
+                    `📦 Product: ${selectedItem.name}\n` +
+                    `🎨 Color: ${selectedColorOption?.name || selectedItem.colors[selectedColorIndex]}\n` +
+                    `📊 Quantity: ${quantity}\n` +
+                    `💰 Total: ₦${(selectedItem.price * quantity).toLocaleString()}\n\n` +
+                    `🖼️ Product Image:\n${window.location.origin}${getCurrentImages()[currentImageIndex]}\n\n` +
+                    `Please confirm this order. Thank you!`
+                  )}`}
+                  onClick={handleWhatsAppClick}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full py-3.5 bg-black text-white rounded-full text-sm font-medium uppercase tracking-wide hover:bg-gray-800 transition-colors text-center"
+                >
+                  Add to cart • ₦{(selectedItem.price * quantity).toLocaleString()}
+                </a>
+                <button
+                  onClick={handleClose}
+                  className="w-full mt-3 py-3 text-sm font-medium uppercase tracking-wide hover:bg-gray-50 transition-colors rounded-full border border-gray-300"
+                >
+                  Continue Shopping
+                </button>
+              </div>
             </div>
           </div>
         </div>
