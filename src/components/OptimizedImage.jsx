@@ -8,23 +8,27 @@ const OptimizedImage = ({
   ...props 
 }) => {
   const [isLoaded, setIsLoaded] = useState(false)
-  const [imageSrc, setImageSrc] = useState(null)
+  const [imageSrc, setImageSrc] = useState(src) // Set initial src immediately
 
   useEffect(() => {
-    // Preload the image
-    const img = new Image()
-    img.src = src
-    
-    img.onload = () => {
-      setImageSrc(src)
+    // For priority images, preload. For lazy images, let native loading handle it
+    if (priority) {
+      const img = new Image()
+      img.src = src
+      
+      img.onload = () => {
+        setImageSrc(src)
+        setIsLoaded(true)
+      }
+
+      return () => {
+        img.onload = null
+      }
+    } else {
+      // For lazy images, mark as loaded immediately and let browser handle lazy loading
       setIsLoaded(true)
     }
-
-    // Cleanup
-    return () => {
-      img.onload = null
-    }
-  }, [src])
+  }, [src, priority])
 
   return (
     <div className={`relative ${className}`}>
@@ -47,18 +51,17 @@ const OptimizedImage = ({
         </div>
       )}
       
-      {/* Actual image with fade-in */}
-      {imageSrc && (
-        <img
-          src={imageSrc}
-          alt={alt}
-          className={`w-full h-full object-contain transition-opacity duration-300 ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          loading={priority ? 'eager' : 'lazy'}
-          {...props}
-        />
-      )}
+      {/* Actual image with fade-in and native lazy loading */}
+      <img
+        src={imageSrc}
+        alt={alt}
+        className={`w-full h-full object-contain transition-opacity duration-300 ${
+          isLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
+        loading={priority ? 'eager' : 'lazy'}
+        onLoad={() => setIsLoaded(true)}
+        {...props}
+      />
     </div>
   )
 }
