@@ -10,15 +10,15 @@ const catalogueItems = [
     name: 'ATSOBER Mr Free Graphic Tee',
     price: 12000,
     category: 'T-Shirts',
-    image: '/Edited images/Design-01/view-01.png',
+    image: '/Edited images/Design-01/view-01.webp',
     images: [
-      '/Edited images/Design-01/view-01.png',
-      '/Edited images/Design-01/view-02.png',
-      '/Edited images/Design-01/view-03.png',
-      '/Edited images/Design-01/view-04.png',
-      '/Edited images/Design-01/view-05.png',
-      '/Edited images/Design-01/view-06.png',
-      '/Edited images/Design-01/view-07.jpg'
+      '/Edited images/Design-01/view-01.webp',
+      '/Edited images/Design-01/view-02.webp',
+      '/Edited images/Design-01/view-03.webp',
+      '/Edited images/Design-01/view-04.webp',
+      '/Edited images/Design-01/view-05.webp',
+      '/Edited images/Design-01/view-06.webp',
+      '/Edited images/Design-01/view-07.webp'
     ],
     description: 'Oversized graphic tee featuring "ATSOBER Mr Free" design with anime-inspired artwork and sports car illustration. Premium cotton blend for maximum comfort.',
     colors: ['Brown'],
